@@ -1,0 +1,81 @@
+{% extends "app/base.html" %}
+
+{% block title %}WOW it's Cart{% endblock %}
+{% load static %}
+
+{% block content %}
+
+    <section class="ftco-section">
+    	<div class="container">
+    		<div class="row justify-content-center mb-5 pb-3 mt-5 pt-5">
+          <div class="col-md-7 heading-section text-center ftco-animate">
+            <h2 class="mb-4">In your cart:</h2>
+            <p class="flip"><span class="deg1"></span><span class="deg2"></span><span class="deg3"></span></p>
+            <p class="mt-5">YOUR CART</p>
+          </div>
+			</div>
+        </div>
+
+        <div class="row">
+			{% for p in products %}
+				{% for i in user_products %}
+					{% if i.name == p.title %}
+					<div class="col-md-6">
+						<div class="pricing-entry d-flex ftco-animate">
+							{% if p.image %}
+							<a href="#{{p.image.url}}" class="menu-img img mb-4"> <img src="{{p.image.url}}" class="menu-img img-fluid" alt=""></a>
+							{% endif %}
+							<div class="desc pl-3">
+								<div class="d-flex text align-items-center">
+									<h3><span>{{p.title|title}}</span></h3>
+									<span class="price">${{p.price}}</span>
+								</div>
+								<div class="d-block">
+									<p>{{p.descr|title}}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+			{% for p in pizzas %}
+				{% for i in user_products %}
+					{% if i.name == p.name %}
+					<div class="col-md-6">
+						<div class="pricing-entry d-flex ftco-animate">
+							{% if p.image %}
+							<a href="#{{p.image.url}}" class="menu-img img mb-4"> <img src="{{p.image.url}}" class="menu-img img-fluid" alt=""></a>
+							{% endif %}
+							<div class="desc pl-3">
+								<div class="d-flex text align-items-center">
+									<h3><span>{{p.name|title}}</span></h3>
+									<span class="price">${{p.price}}</span>
+								</div>
+								<div class="d-block">
+									{% for key, value in ing.items %}
+									{% if p.name == key %}
+									<p>{{p.name|title}} состоит из {{value}}</p>
+									{% endif %}
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+    	</div>
+		<form action="#" method="post">
+			{% csrf_token %}
+			<input style="visibility:hidden" name="User" value="{{user.id}}">
+			<h3><span>Total price:   </span></h3>
+			<h3><span class="price">${{total_price}}</span></h3>
+			<div class="form-group">
+			  <input type="submit" name="action" value="Clear CART" class="btn btn-primary py-3 px-4">
+			</div>
+		</form>
+
+    </section>
+
+{% endblock %}

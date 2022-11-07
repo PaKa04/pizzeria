@@ -1,0 +1,118 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block title %}WOW it's services{% endblock %}
+
+{% block content %}
+
+    <section class="home-slider owl-carousel img" style="background-image: url({% static 'images/bg_1.jpg' %});">
+
+      <div class="slider-item" style="background-image: url({% static 'images/bg_3.jpg' %});">
+      	<div class="overlay"></div>
+        <div class="container">
+          <div class="row slider-text justify-content-center align-items-center">
+
+            <div class="col-md-7 col-sm-12 text-center ftco-animate">
+            	<h1 class="mb-3 mt-5 bread">Services</h1>
+	            <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'main' %}">Home</a></span> <span>Services</span></p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+    
+
+    <section class="ftco-section ftco-services">
+    	<div class="overlay"></div>
+    	<div class="container">
+    		<div class="row justify-content-center mb-5 pb-3">
+          <div class="col-md-7 heading-section ftco-animate text-center">
+            <h2 class="mb-4">Our Services</h2>
+            <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+          </div>
+        </div>
+    		<div class="row">
+          <div class="col-md-4 ftco-animate">
+            <div class="media d-block text-center block-6 services">
+              <div class="icon d-flex justify-content-center align-items-center mb-5">
+              	<span class="flaticon-diet"></span>
+              </div>
+              <div class="media-body">
+                <h3 class="heading">Healthy Foods</h3>
+                <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md-4 ftco-animate">
+            <div class="media d-block text-center block-6 services">
+              <div class="icon d-flex justify-content-center align-items-center mb-5">
+              	<span class="flaticon-bicycle"></span>
+              </div>
+              <div class="media-body">
+                <h3 class="heading">Fastest Delivery</h3>
+                <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md-4 ftco-animate">
+            <div class="media d-block text-center block-6 services">
+              <div class="icon d-flex justify-content-center align-items-center mb-5"><span class="flaticon-pizza-1"></span></div>
+              <div class="media-body">
+                <h3 class="heading">Original Recipes</h3>
+                <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
+              </div>
+            </div>    
+          </div>
+        </div>
+    	</div>
+    </section>
+
+    <section class="ftco-section">
+    	<div class="container">
+    		<div class="row justify-content-center mb-5 pb-3">
+          <div class="col-md-7 heading-section ftco-animate text-center">
+            <h2 class="mb-4">Hot Meals</h2>
+            <p class="flip"><span class="deg1"></span><span class="deg2"></span><span class="deg3"></span></p>
+            <p class="mt-5">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+          </div>
+        </div>
+    		<div class="row">
+
+
+      		{% for pizza in pizzas %}
+		              		<div class="col-md-4 text-center">
+		              			<div class="menu-wrap">
+									<form action="#" method="post">
+										{% csrf_token %}
+										{% if pizza.image %}
+										<a href="#{{pizza.image.url}}" class="menu-img img mb-4"> <img src="{{pizza.image.url}}" class="menu-img img-fluid" alt=""></a>
+										{% endif %}
+										<input style="visibility:hidden" name="User" value="{{user.id}}"><input style="visibility:hidden" name="Nameofprod" value="{{pizza.name}}">
+										<div class="text">
+											<h3><a href="#">{{pizza.name|title}}</a></h3>
+											{% for key, value in ing.items %}
+											{% if pizza.name == key %}
+											<p>{{pizza.name|title}} состоит из {{value}}</p>
+											{% endif %}
+											{% endfor %}
+											<p class="price"><span>${{pizza.price}}</span></p>
+											{% if user.is_authenticated %}
+											<div class="form-group">
+											  <input type="submit" name="action" value="Add to Cart" class="btn btn-primary py-3 px-4">
+											</div>
+											{% endif %}
+											{% if not user.is_authenticated %}
+											<p><a href="{% url 'signin' %}" class="btn btn-white btn-outline-white">Add to cart</a></p>
+											{% endif %}
+										</div>
+									</form>
+		              			</div>
+		              		</div>
+							{% endfor %}
+				</div>
+    		</div>
+    	</div>
+    </section>
+
+{% endblock %}
