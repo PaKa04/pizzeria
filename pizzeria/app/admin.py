@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Pizza, Category, Product, Ingridients, Contact
+from .models import Pizza, Category, Product, Ingridients, Contact, Cart, Post, Comments
+
+
 # Register your models here.
 
 
@@ -73,3 +75,26 @@ class ContactAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_created'
     list_display = ('name', 'email', 'date_created')
     list_filter = ('name', 'email')
+
+
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    empty_value_display = 'Нафиг надо'
+    list_display = ('name', 'user')
+    list_filter = ('user', 'name')
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('title', 'subtitle')}
+    list_display = ('title', 'slug', 'date_published')
+    date_hierarchy = 'date_published'
+    list_filter = ('is_published', )
+    readonly_fields = ('date_published', )
+    actions = (make_published, make_unpublished)
+    search_fields = ('title', 'id', 'subtitle')
+
+
+@admin.register(Comments)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ('user', 'post', 'date_published',)

@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
-from .models import Pizza,  Category, Product, Cart
+from .models import Pizza, Category, Product, Cart, Post
 from django.views import View
 from .forms import ContactForm
 from django.views.generic import ListView, DetailView, CreateView
@@ -72,10 +72,6 @@ class AboutView(IndexView):
     template_name = 'app/about.html'
 
 
-class BlogView(IndexView):
-    template_name = 'app/blog.html'
-
-
 class ContactView(IndexView):
     template_name = 'app/contact.html'
 
@@ -88,8 +84,28 @@ class ServicesView(IndexView):
     template_name = 'app/services.html'
 
 
-class PostView(IndexView):
+class BlogView(View):
+    model = Post
+    context_object_name = 'posts'
+    template_name = 'app/blog.html'
+    posts = Post.objects.all().order_by('date_published')
+    context = {
+        'posts': posts
+    }
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        context = self.context
+        return render(request, self.template_name, context)
+
+
+class PostView(BlogView, DetailView):
     template_name = 'app/blog-single.html'
+
+    def get(self, request, post_slug):
+        post = get_object_or_404(Post, slug=post_slug)
+        context = self.context
+        context['post'] = post
+        return render(request, self.template_name, context)
 
 
 def error404(request, exception):

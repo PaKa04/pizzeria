@@ -1,5 +1,7 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 from django.utils.timezone import now
 # Create your models here.
 
@@ -196,48 +198,99 @@ class Cart(models.Model):
         verbose_name = 'корзина'
         verbose_name_plural = 'корзины'
 
-# class Order(models.Model):
-#     user = models.ForeignKey(
-#         settings.AUTH_USER_MODEL,
-#         verbose_name='пользователь',
-#         on_delete=models.DO_NOTHING
-#     )
-#     pizza = models.ForeignKey(
-#         'Pizza',
-#         verbose_name='пицца',
-#         on_delete=models.DO_NOTHING
-#     )
-#     drinks = models.ForeignKey(
-#         'Drinks',
-#         verbose_name='напитки',
-#         on_delete=models.DO_NOTHING
-#     )
-#     snacks = models.ForeignKey(
-#         'Snacks',
-#         verbose_name='закуски',
-#         on_delete=models.DO_NOTHING
-#     )
-#     date_created = models.DateTimeField(
-#         auto_now_add=True,
-#         verbose_name='дата'
-#     )
-#     price = models.DecimalField(
-#         decimal_places=2,
-#         max_digits=6,
-#         default=0,
-#         verbose_name='цена',
-#         help_text='Max 9999.99'
-#     )
-#     is_paid = models.BooleanField(
-#         default=False,
-#         verbose_name='статус заказа'
-#     )
-#
-#     def __str__(self):
-#         return f'пользователь: {self.user}   заказ: {self.pizza}'
-#
-#     class Meta:
-#         db_table = 'app_orders'
-#         ordering = ('date_created',)
-#         verbose_name = 'заказ'
-#         verbose_name_plural = 'заказы'
+
+class Post(models.Model):
+
+    title = models.CharField(
+        max_length=24,
+        verbose_name='title'
+    )
+    subtitle = models.CharField(
+        max_length=24,
+        verbose_name='Если был такой title',
+        null=True,
+        blank=True
+    )
+    preshow_text = models.CharField(
+        max_length=90,
+        verbose_name='Текст отображаемый в блоге',
+        help_text='MAX 90 symbols',
+        default='вам следует это прочитать'
+    )
+    first_text = models.TextField(
+        verbose_name='first text'
+    )
+    image_of_post1 = models.ImageField(
+        upload_to='posts/',
+        verbose_name='image of post1',
+        help_text='Обязательно'
+    )
+    image_of_post2 = models.ImageField(
+        upload_to='posts/',
+        verbose_name='image of post2',
+        null=True,
+        blank=True
+    )
+    second_text = models.TextField(
+        verbose_name='second text'
+    )
+    last_text = models.TextField(
+        verbose_name='last text',
+        null=True,
+        blank=True
+    )
+    is_published = models.BooleanField(
+        default=False,
+        verbose_name='is published'
+    )
+    date_published = models.DateTimeField(
+        default=now(),
+        verbose_name='date published'
+    )
+    author = models.CharField(
+        max_length=24,
+        verbose_name='Автор',
+        default='Pizzeria'
+    )
+    slug = models.SlugField(
+        unique=True,
+        verbose_name='URL'
+    )
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('post', kwargs={'post_slug': self.slug})
+
+    class Meta:
+        db_table = 'blog_posts'
+        verbose_name = 'пост'
+        verbose_name_plural = 'посты'
+        ordering = ('date_published', )
+
+
+class Comments(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name='пользователь',
+        on_delete=models.DO_NOTHING
+    )
+    date_published = models.DateTimeField(
+        default=now(),
+        verbose_name='date published'
+    )
+    post = models.ForeignKey(
+        Post,
+        verbose_name='Post',
+        on_delete=models.DO_NOTHING
+    )
+
+    def __str__(self):
+        return self.user
+
+    class Meta:
+        db_table = 'app_comments'
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
+        ordering = ('date_published',)
