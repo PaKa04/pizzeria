@@ -24,18 +24,33 @@
     
 
     <section class="ftco-section">
+        <div class="col-md-4 sidebar ftco-animate">
+            <div class="sidebar-box">
+              <form action="#" class="search-form" method="post">
+                  {% csrf_token %}
+                <div class="form-group">
+                	<div class="icon">
+	                  <span class="icon-search"></span>
+                    </div>
+                  <input type="text" class="form-control" name="search" placeholder="Search in blog...">
+                </div>
+              </form>
+            </div>
+        </div>
       <div class="container">
+
         <div class="row justify-content-center mb-5 pb-3">
           <div class="col-md-7 heading-section ftco-animate text-center">
             <h2 class="mb-4">Read our blog</h2>
             <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
           </div>
         </div>
+
         <div class="row d-flex">
         {% for post in posts %}
           <div class="col-md-4 d-flex ftco-animate">
           	<div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20" style="background-image: url('{{post.image_of_post1.url}}');">
+              <a href="{{post.slug}}" class="block-20" style="background-image: url('{{post.image_of_post1.url}}');">
               </a>
               <div class="text py-4 d-block">
               	<div class="meta">

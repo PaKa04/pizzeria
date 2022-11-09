@@ -285,6 +285,11 @@ class Comments(models.Model):
         verbose_name='Post',
         on_delete=models.DO_NOTHING
     )
+    text = models.TextField(
+        verbose_name='text of comment',
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return self.user

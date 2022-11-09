@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.utils.timezone import now
 
-from .models import Pizza, Category, Product, Cart, Post
+from .models import Pizza, Category, Product, Cart, Post, Comments
 from django.views import View
 from .forms import ContactForm
 from django.views.generic import ListView, DetailView, CreateView
@@ -35,6 +36,7 @@ class IndexView(View):
             'columns_pizza': two_column_pizzas,
             'contact_form': ContactForm(),
             'contact_error': None,
+            'posts': Post.objects.all().order_by('date_published')[0:5]
         }
         return content
 
@@ -97,14 +99,41 @@ class BlogView(View):
         context = self.context
         return render(request, self.template_name, context)
 
+    def post(self, request):
+        context = self.context
+        posts = Post.objects.all().order_by('date_published')
+        search_request = request.POST
+        search_posts = []
+        for post in posts:
+            if f'{search_request["search"]}'.lower() in f'{post.title}'.lower():
+                search_posts.append(post)
+        context['posts'] = search_posts
+        return render(request, self.template_name, context)
+
 
 class PostView(BlogView, DetailView):
     template_name = 'app/blog-single.html'
+    slug_url_kwarg = 'post_slug'
 
-    def get(self, request, post_slug):
-        post = get_object_or_404(Post, slug=post_slug)
+    def get(self, request, **kwargs):
+        posts = Post.objects.all().order_by('date_published')[0:5]
+        post = get_object_or_404(Post, slug=kwargs['post_slug'])
+        comments = Comments.objects.filter(post_id=post.id)
         context = self.context
         context['post'] = post
+        context['posts'] = posts
+        context['comments'] = comments
+        return render(request, self.template_name, context)
+
+    def post(self, request, **kwargs):
+
+        context = self.context
+        b = Comments()
+        b.user_id = request.POST['User']
+        b.post_id = request.POST['SUPOST']
+        b.text = request.POST['FUCK']
+        b.date_published = now()
+        b.save()
         return render(request, self.template_name, context)
 
 
