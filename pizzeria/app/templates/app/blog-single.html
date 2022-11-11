@@ -62,12 +62,19 @@
                     <img src="{% static 'images/anonymous.jpg' %}" alt="Image placeholder">
                   </div>
                   <div class="comment-body">
-                    {% if user.id == com.user_id %}
-                    <h3>{{user.username}}</h3>
-                    {% endif %}
+
+                    <h3>{{com.user}}</h3>
+
                     <div class="meta">{{com.date_published}}</div>
                     <p>{{com.text}}</p>
-<!--                    <p><a href="#" class="reply">Reply</a></p>-->
+                    {% if user.username == com.user %}
+                    <form action="#" method="post">
+                      {% csrf_token %}
+                    <p><div class="form-group">
+                    <input type="submit" action="action" id="{{com.id}}" name="action" value="Delete Comment"  class="btn py-3 px-4 btn-primary"><input style="visibility:hidden" name="CommentID" value="{{com.id}}"><input style="visibility:hidden" name="PostID" value="{{com.post_id}}">
+                  </div></p>
+                      </form>
+                    {% endif %}
                   </div>
                 </li>
 
@@ -79,13 +86,13 @@
                 <h3 class="mb-5">Leave a comment</h3>
                 <form action="#" method="post">
                   {% csrf_token %}
-                  <input style="visibility:hidden" name="User" value="{{user.id}}">
+                  <input style="visibility:hidden" name="User" value="{{user.username}}">
                   <div class="form-group">
                     <h3>Message</h3>
                     <textarea name="FUCK" cols="30" rows="10" class="form-control"></textarea>
                   </div>
                   <div class="form-group">
-                    <input type="submit" action="action" value="Post Comment" class="btn py-3 px-4 btn-primary">
+                    <input type="submit" name="action" value="Post Comment" class="btn py-3 px-4 btn-primary">
                   </div>
                   <input style="visibility:hidden" name="SUPOST" value="{{post.id}}">
                 </form>

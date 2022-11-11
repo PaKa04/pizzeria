@@ -271,10 +271,9 @@ class Post(models.Model):
 
 
 class Comments(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        verbose_name='пользователь',
-        on_delete=models.DO_NOTHING
+    user = models.CharField(
+        max_length=150,
+        verbose_name='username'
     )
     date_published = models.DateTimeField(
         default=now(),

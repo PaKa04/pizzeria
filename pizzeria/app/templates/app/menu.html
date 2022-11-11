@@ -22,79 +22,6 @@
       </div>
 	</section>
     <section class="ftco-section">
-    	<div class="container">
-    		<div class="row justify-content-center mb-5 pb-3">
-          <div class="col-md-7 heading-section ftco-animate text-center">
-            <h2 class="mb-4">Здесь надо сделать спецюпредложения</h2>
-            <p>создать новый модуль со спец предложениями</p>
-          </div>
-        </div>
-    	</div>
-    	<div class="container-wrap">
-    		<div class="row no-gutters d-flex">
-    			<div class="col-lg-4 d-flex ftco-animate">
-    				<div class="services-wrap d-flex">
-    					<a href="#" class="img" style="background-image: url({% static 'images/pizza-1.jpg' %});"></a>
-    					<div class="text p-4">
-    						<h3>Italian Pizza</h3>
-    						<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia </p>
-    						<p class="price"><span>$2.90</span> <a href="#" class="ml-2 btn btn-white btn-outline-white">Order</a></p>
-    					</div>
-    				</div>
-    			</div>
-    			<div class="col-lg-4 d-flex ftco-animate">
-    				<div class="services-wrap d-flex">
-    					<a href="#" class="img" style="background-image: url({% static 'images/pizza-2.jpg' %});"></a>
-    					<div class="text p-4">
-    						<h3>Greek Pizza</h3>
-    						<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
-    						<p class="price"><span>$2.90</span> <a href="#" class="ml-2 btn btn-white btn-outline-white">Order</a></p>
-    					</div>
-    				</div>
-    			</div>
-    			<div class="col-lg-4 d-flex ftco-animate">
-    				<div class="services-wrap d-flex">
-    					<a href="#" class="img" style="background-image: url({% static 'images/pizza-3.jpg' %});"></a>
-    					<div class="text p-4">
-    						<h3>Caucasian Pizza</h3>
-    						<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
-    						<p class="price"><span>$2.90</span> <a href="#" class="ml-2 btn btn-white btn-outline-white">Order</a></p>
-    					</div>
-    				</div>
-    			</div>
-
-    			<div class="col-lg-4 d-flex ftco-animate">
-    				<div class="services-wrap d-flex">
-    					<a href="#" class="img order-lg-last" style="background-image: url({% static 'images/pizza-4.jpg' %});"></a>
-    					<div class="text p-4">
-    						<h3>American Pizza</h3>
-    						<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia </p>
-    						<p class="price"><span>$2.90</span> <a href="#" class="ml-2 btn btn-white btn-outline-white">Order</a></p>
-    					</div>
-    				</div>
-    			</div>
-    			<div class="col-lg-4 d-flex ftco-animate">
-    				<div class="services-wrap d-flex">
-    					<a href="#" class="img order-lg-last" style="background-image: url({% static 'images/pizza-5.jpg' %});"></a>
-    					<div class="text p-4">
-    						<h3>Tomatoe Pie</h3>
-    						<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
-    						<p class="price"><span>$2.90</span> <a href="#" class="ml-2 btn btn-white btn-outline-white">Order</a></p>
-    					</div>
-    				</div>
-    			</div>
-    			<div class="col-lg-4 d-flex ftco-animate">
-    				<div class="services-wrap d-flex">
-    					<a href="#" class="img order-lg-last" style="background-image: url({% static 'images/pizza-6.jpg' %})"></a>
-    					<div class="text p-4">
-    						<h3>Margherita</h3>
-    						<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
-    						<p class="price"><span>$2.90</span> <a href="#" class="ml-2 btn btn-white btn-outline-white">Order</a></p>
-    					</div>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
 
     	<div class="container">
     		<div class="row justify-content-center mb-5 pb-3 mt-5 pt-5">
@@ -182,7 +109,7 @@
 										{% if pizza.image %}
 										<a href="#{{pizza.image.url}}" class="menu-img img mb-4"> <img src="{{pizza.image.url}}" class="menu-img img-fluid" alt=""></a>
 										{% endif %}
-										<input style="visibility:hidden" name="User" value="{{user.id}}"><input style="visibility:hidden" name="Nameofprod" value="{{pizza.name}}">
+
 										<div class="text">
 											<h3><a href="#">{{pizza.name|title}}</a></h3>
 											{% for key, value in ing.items %}
@@ -193,7 +120,7 @@
 											<p class="price"><span>${{pizza.price}}</span></p>
 											{% if user.is_authenticated %}
 											<div class="form-group">
-											  <input type="submit" name="action" value="Add to Cart" class="btn btn-primary py-3 px-4">
+											  <input type="submit" name="action" value="Add to Cart" class="btn btn-primary py-3 px-4"><input style="visibility:hidden" name="User" value="{{user.id}}"><input style="visibility:hidden" name="Nameofprod" value="{{pizza.name}}">
 											</div>
 											{% endif %}
 											{% if not user.is_authenticated %}
@@ -209,7 +136,6 @@
 
 					  {% for category in categories %}
 
-
 		              <div class="tab-pane fade" id="v-pills-{{category.name|title}}" role="tabpanel" aria-labelledby="v-pills-{{category.name|title}}-tab">
 		                <div class="row">
 							{% for product in products %}
@@ -223,14 +149,14 @@
 										{% if product.image %}
 										<a href="#" class="menu-img img mb-4"> <img src="{{product.image.url}}" class="menu-img img-fluid" alt=""></a>
 		              					{% endif %}
-										<input style="visibility:hidden" name="User" value="{{user.id}}"><input style="visibility:hidden" name="Nameofprod" value="{{product.title}}">
+
 										<div class="text">
 										<h3><a href="#" >{{product.title|title}}</a></h3>
 		              					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p>
 		              					<p class="price"><span>${{product.price}}</span></p>
 										{% if user.is_authenticated %}
 										<div class="form-group">
-										  <input type="submit" name="action" value="Add to Cart" class="btn btn-primary py-3 px-4">
+										  <input type="submit" name="action" value="Add to Cart" class="btn btn-primary py-3 px-4"><input style="visibility:hidden" name="User" value="{{user.id}}"><input style="visibility:hidden" name="Nameofprod" value="{{product.title}}">
 										</div>
 										{% endif %}
 										{% if not user.is_authenticated %}

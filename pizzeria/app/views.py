@@ -1,5 +1,6 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.utils.timezone import now
 
@@ -90,7 +91,7 @@ class BlogView(View):
     model = Post
     context_object_name = 'posts'
     template_name = 'app/blog.html'
-    posts = Post.objects.all().order_by('date_published')
+    posts = Post.objects.all().filter(is_published=True).order_by('date_published')
     context = {
         'posts': posts
     }
@@ -116,7 +117,7 @@ class PostView(BlogView, DetailView):
     slug_url_kwarg = 'post_slug'
 
     def get(self, request, **kwargs):
-        posts = Post.objects.all().order_by('date_published')[0:5]
+        posts = Post.objects.all().filter(is_published=True).order_by('date_published')[0:5]
         post = get_object_or_404(Post, slug=kwargs['post_slug'])
         comments = Comments.objects.filter(post_id=post.id)
         context = self.context
@@ -126,15 +127,139 @@ class PostView(BlogView, DetailView):
         return render(request, self.template_name, context)
 
     def post(self, request, **kwargs):
-
-        context = self.context
-        b = Comments()
-        b.user_id = request.POST['User']
-        b.post_id = request.POST['SUPOST']
-        b.text = request.POST['FUCK']
-        b.date_published = now()
-        b.save()
+        print(request.POST)
+        if request.POST['action'] == 'Post Comment':
+            context = self.context
+            b = Comments()
+            b.user = request.POST['User']
+            b.post_id = request.POST['SUPOST']
+            b.text = request.POST['FUCK']
+            b.date_published = now()
+            b.save()
+        elif request.POST['action'] == 'Delete Comment':
+            c = Comments.objects.filter(id=request.POST['CommentID'])
+            c.delete()
+            context = self.context
+            comments = Comments.objects.filter(post_id=request.POST['PostID'])
+            context['comments'] = comments
         return render(request, self.template_name, context)
+
+
+class PostApiView(View):
+
+    def get(self, request: HttpResponse, post_id=None):
+        if not post_id:
+            posts = Post.objects.all().filter(is_published=True)
+            data = {}
+            for post in posts:
+                data[str(post.id)] = {
+                    'title': post.title,
+                    'subtitle': post.subtitle,
+                    'first_text': post.first_text,
+                    'image_of_post1': post.image_of_post1.url,
+                    'second_text': post.second_text,
+                    'author': post.author
+                }
+            return JsonResponse(data=data)
+        else:
+            post = Post.objects.filter(pk=int(post_id))
+            if post:
+                post = post[0]
+                post = {
+                    'title': post.title,
+                    'subtitle': post.subtitle,
+                    'first_text': post.first_text,
+                    'image_of_post1': post.image_of_post1.url,
+                    'second_text': post.second_text,
+                    'author': post.author
+                }
+                return JsonResponse(data=post)
+            else:
+                return JsonResponse(data={'status': 404, 'detail': f'post {post_id} does not exist'}, status=404)
+
+
+class CategoryApiView(View):
+
+    def get(self, request: HttpResponse, category_id=None):
+        if not category_id:
+            posts = Category.objects.all().filter(is_published=True)
+            data = {}
+            for post in posts:
+                data[str(post.id)] = {
+                    'name': post.name,
+                    'descr': post.descr
+                }
+            return JsonResponse(data=data)
+        else:
+            post = Category.objects.filter(pk=int(category_id))
+            if post:
+                post = post[0]
+                post = {
+                    'name': post.name,
+                    'descr': post.descr
+                }
+                return JsonResponse(data=post)
+            else:
+                return JsonResponse(data={'status': 404, 'detail': f'category {category_id} does not exist'}, status=404)
+
+
+class ProductApiView(View):
+
+    def get(self, request: HttpResponse, category_id,  product_id=None, ):
+        if not product_id:
+            posts = Product.objects.all().filter(is_published=True, category_id=int(category_id))
+            data = {}
+            for post in posts:
+                data[str(post.id)] = {
+                    'title': post.title,
+                    'descr': post.descr,
+                    'price': post.price,
+                    'image': post.image.url if post.image else 'Null'
+                }
+            return JsonResponse(data=data)
+        else:
+            post = Product.objects.filter(pk=int(product_id))
+            if post:
+                post = post[0]
+                post = {
+                    'title': post.title,
+                    'descr': post.descr,
+                    'price': post.price,
+                    'image':  post.image.url if post.image else 'Null'
+                }
+                return JsonResponse(data=post)
+            else:
+                return JsonResponse(data={'status': 404, 'detail': f'product {product_id} does not exist or wrong categori id {category_id}'}, status=404)
+
+
+class PizzaApiView(View):
+
+    def get(self, request: HttpResponse, pizza_id=None):
+        if not pizza_id:
+            posts = Pizza.objects.all().filter(is_published=True)
+            data = {}
+            for post in posts:
+                data[str(post.id)] = {
+                    'title': post.name,
+                    'descr': post.descr,
+                    'price': post.price,
+                    'image': post.image.url if post.image else 'Null'
+                }
+            return JsonResponse(data=data)
+        else:
+            post = Pizza.objects.filter(pk=int(pizza_id))
+            if post:
+                post = post[0]
+                post = {
+                    'title': post.name,
+                    'descr': post.descr,
+                    'price': post.price,
+                    'image': post.image.url if post.image else 'Null'
+                }
+                return JsonResponse(data=post)
+            else:
+                return JsonResponse(data={'status': 404, 'detail': f'product {pizza_id} does not exist'}, status=404)
+
 
 
 def error404(request, exception):
