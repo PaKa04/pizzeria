@@ -96,7 +96,10 @@ class Category(models.Model):
         verbose_name='описание',
         help_text='max 140 symbols'
     )
-    is_published = models.BooleanField(default=False, verbose_name='publication')
+    is_published = models.BooleanField(
+        default=False,
+        verbose_name='publication'
+    )
 
     def __str__(self):
         return self.name
@@ -153,9 +156,18 @@ class Product(models.Model):
 
 
 class Contact(models.Model):
-    name = models.CharField(max_length=64, verbose_name='имя')
-    email = models.CharField(max_length=77, verbose_name='почта')
-    message = models.CharField(max_length=1024, verbose_name='сообщение')
+    name = models.CharField(
+        max_length=64,
+        verbose_name='имя'
+    )
+    email = models.CharField(
+        max_length=77,
+        verbose_name='почта'
+    )
+    message = models.CharField(
+        max_length=1024,
+        verbose_name='сообщение'
+    )
     date_created = models.DateTimeField(
         default=now(),
         verbose_name='дата'
