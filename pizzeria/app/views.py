@@ -259,8 +259,3 @@ class PizzaApiView(View):
                 return JsonResponse(data=post)
             else:
                 return JsonResponse(data={'status': 404, 'detail': f'product {pizza_id} does not exist'}, status=404)
-
-
-
-def error404(request, exception):
-    return HttpResponse('404 not found')
