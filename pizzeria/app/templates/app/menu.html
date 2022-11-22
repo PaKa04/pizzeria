@@ -104,7 +104,7 @@
 							{% for pizza in pizzas %}
 		              		<div class="col-md-4 text-center">
 		              			<div class="menu-wrap">
-									<form action="#" method="post">
+									<form  name="pizzaform" id="pizzaform" method="post">
 										{% csrf_token %}
 										{% if pizza.image %}
 										<a href="#{{pizza.image.url}}" class="menu-img img mb-4"> <img src="{{pizza.image.url}}" class="menu-img img-fluid" alt=""></a>
@@ -144,7 +144,7 @@
 		              			<div class="menu-wrap">
 
 
-									<form action="#" method="post">
+									<form name="productform" id="productform" method="post">
 										{% csrf_token %}
 										{% if product.image %}
 										<a href="#" class="menu-img img mb-4"> <img src="{{product.image.url}}" class="menu-img img-fluid" alt=""></a>
@@ -156,7 +156,7 @@
 		              					<p class="price"><span>${{product.price}}</span></p>
 										{% if user.is_authenticated %}
 										<div class="form-group">
-										  <input type="submit" name="action" value="Add to Cart" class="btn btn-primary py-3 px-4"><input style="visibility:hidden" name="User" value="{{user.id}}"><input style="visibility:hidden" name="Nameofprod" value="{{product.title}}">
+										  <input type="submit" name="action" value="Add to Cart" class="btn btn-primary py-3 px-4"><input style="visibility:hidden" name="User"  value="{{user.id}}"><input style="visibility:hidden" name="Nameofprod" value="{{ product.title }}">
 										</div>
 										{% endif %}
 										{% if not user.is_authenticated %}
@@ -181,5 +181,6 @@
 		    </div>
     	</div>
     </section>
+
 
     {% endblock %}

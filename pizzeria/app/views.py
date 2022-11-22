@@ -82,6 +82,16 @@ class ContactView(IndexView):
 class MenuView(IndexView):
     template_name = 'app/menu.html'
 
+    def post(self, request):
+
+        b = Cart()
+        b.user_id = request.POST['User']
+        b.name = request.POST['Nameofprod']
+
+        b.save()
+        content = self.get_context_data()
+        return render(request, self.template_name, content)
+
 
 class ServicesView(IndexView):
     template_name = 'app/services.html'
